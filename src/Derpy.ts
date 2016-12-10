@@ -14,6 +14,7 @@ export class Derpy {
                 token: authToken
             });
         this.getReady();
+        this.letterBag = new LetterBag();
     }
 
     private getReady() {
@@ -70,11 +71,11 @@ export class Derpy {
 
     private greet(channelID: string, userName: string) {
         this.say(channelID,
-            'Hello '  + userName + '\n' +
+            'Hello ' + userName + '\n' +
             'I am your friendly mail mare!' + '\n' +
             'You can let me **say** <something>' + '\n' +
             'or let me **take a letter** <your letter>,' + '\n' +
-            'but if you want to add something to it just use **ps** <something>,' +'\n' +
+            'but if you want to add something to it just use **ps** <something>,' + '\n' +
             'and just to be sure to get your letter afterwards. ' + '\n' +
             '**get me my letter** (I will no longer have it then.)');
     }
