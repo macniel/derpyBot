@@ -36,12 +36,7 @@ class DerpyBot {
 
     private parseCommand(userName: string, channelID: string, message: string) {
         if (message.startsWith('help') || message.trim() == '') {
-            this.say(channelID, `Hello ${userName},
-I am your friendly mail mare!
-You can let me **say** <something>
-or let me **take a letter** <your letter>,
-but if you want to add something to it just use **ps** <something>,
-and just to be sure to get your letter afterwards by letting me know to **get me my letter** (I will no longer have it then.)`);
+            this.greet(channelID, userName);
         } else if (message.startsWith('say')) {
             this.say(channelID, message.substring('say'.length));
         } else if (message.startsWith('take a letter')) {
@@ -88,6 +83,15 @@ and just to be sure to get your letter afterwards by letting me know to **get me
             to: channelID,
             message: what
         });
+    }
+
+    private greet(channelID: string, userName: string) {
+        this.say(channelID, `Hello ${userName},
+I am your friendly mail mare!
+You can let me **say** <something>
+or let me **take a letter** <your letter>,
+but if you want to add something to it just use **ps** <something>,
+and just to be sure to get your letter afterwards by letting me know to **get me my letter** (I will no longer have it then.)`);
     }
 
 }
