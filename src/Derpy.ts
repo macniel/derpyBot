@@ -5,8 +5,12 @@ export class Derpy {
 
     private discordClient: Client;
     private letterBag: LetterBag;
+    private broadcastChannelName: string;
+
 
     constructor(authToken: string) {
+
+        this.broadcastChannelName = 'general';
 
         this.discordClient = new Client(
             {
@@ -33,6 +37,46 @@ export class Derpy {
                 this.parseCommand(user, channelID, message);
             }
         });
+
+        this.discordClient.on('voiceStateUpdate', (payload: { d: { user_id: string, suppress: boolean, session_id: string, channel_id: string | null } }) => {
+            if (payload.d != null && payload.d.channel_id != null) {
+                const userName = this.getMemberById(payload.d.user_id);
+                const voiceChannel = this.getChannelNamebyId(payload.d.channel_id);
+                this.discordClient.sendMessage(
+                    {
+                        to: this.getChannelIdByName(this.broadcastChannelName),
+                        message: '@everyone ' + userName + ' has joined the Voicechat-channel "' + voiceChannel + '"'
+                    });
+            }
+        });
+    }
+
+    private getMemberById(id) {
+        for (const userId in this.discordClient.users) {
+            if (userId === id) {
+                return this.discordClient.users[userId].username;
+            }
+        }
+        throw new Error('User with given Id was not found.');
+    }
+
+
+    private getChannelNamebyId(id) {
+        for (const channelId in this.discordClient.channels) {
+            if (channelId === id) {
+                return this.discordClient.channels[channelId].name;
+            }
+        }
+        throw new Error('Channel with given Id was not found.');
+    }
+
+    private getChannelIdByName(name) {
+        for (const channelId in this.discordClient.channels) {
+            if (this.discordClient.channels[channelId].name === name) {
+                return channelId;
+            }
+        }
+        throw new Error('Channel with the name "' + name + '" not found.');
     }
 
     private parseCommand(userName: string, channelID: string, message: string) {
